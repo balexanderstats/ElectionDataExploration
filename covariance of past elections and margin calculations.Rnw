@@ -1,0 +1,128 @@
+\documentclass{article}
+
+\begin{document}
+
+<<>>=
+data1=read.csv("~/Fundamental Models/pastvote.csv")
+summary(data1)
+head(data1)
+colnames(data1)<-c("State","Year","Dem","Rep","Other","Dem2P","Rep2P")
+head(data1)
+y1976=subset(data1, Year=="1976")
+y1980=subset(data1,Year=="1980")
+y1984=subset(data1,Year=="1984")
+y1988=subset(data1,Year=="1988")
+y1992=subset(data1,Year=="1992")
+y1996=subset(data1,Year=="1996")
+y2000=subset(data1,Year=="2000")
+y2004=subset(data1,Year=="2004")
+y2008=subset(data1,Year=="2008")
+y2012=subset(data1,Year=="2012")
+y2016=subset(data1,Year=="2016")
+vdata=rbind(cbind(y1976$Dem2P,y1980$Dem2P),cbind(y1980$Dem2P,y1984$Dem2P), cbind(y1984$Dem2P,y1988$Dem2P),cbind(y1992$Dem2P,y1996$Dem2P),cbind(y1996$Dem2P,y2000$Dem2P),cbind(y2000$Dem2P,y2004$Dem2P),cbind(y2004$Dem2P,y2008$Dem2P),cbind(y2008$Dem2P,y2012$Dem2P),cbind(y2012$Dem2P,y2016$Dem2P))
+pastelection=rbind(y1976$Dem2P,y1980$Dem2P,y1984$Dem2P,y1988$Dem2P,y1992$Dem2P,y1996$Dem2P,y2000$Dem2P,y2004$Dem2P,y2008$Dem2P,y2012$Dem2P)
+currentelection=rbind(y1980$Dem2P,y1984$Dem2P,y1988$Dem2P,y1992$Dem2P,y1996$Dem2P,y2000$Dem2P,y2004$Dem2P,y2008$Dem2P,y2012$Dem2P,y2016$Dem2P)
+vdf=data.frame("past"=pastelection, "election"=currentelection)
+lm(vdf$election~vdf$past)
+cov(vdata[,1],vdata[,2])
+cor(vdata[,1],vdata[,2])
+x1976=subset(data1, Year=="1976"&&State!="Washington DC")
+x1980=subset(data1,Year=="1980"&&State!="Washington DC")
+x1984=subset(data1,Year=="1984"&&State!="Washington DC")
+x1988=subset(data1,Year=="1988"&&State!="Washington DC")
+x1992=subset(data1,Year=="1992"&&State!="Washington DC")
+x1996=subset(data1,Year=="1996"&&State!="Washington DC")
+x2000=subset(data1,Year=="2000"&&State!="Washington DC")
+x2004=subset(data1,Year=="2004"&&State!="Washington DC")
+x2008=subset(data1,Year=="2008"&&State!="Washington DC")
+x2012=subset(data1,Year=="2012"&&State!="Washington DC")
+x2016=subset(data1,Year=="2016"&&State!="Washington DC")
+vdata2=rbind(cbind(x1976$Dem2P,x1980$Dem2P),cbind(x1980$Dem2P,x1984$Dem2P), cbind(x1984$Dem2P,x1988$Dem2P),cbind(x1992$Dem2P,x1996$Dem2P),cbind(x1996$Dem2P,x2000$Dem2P),cbind(x2000$Dem2P,x2004$Dem2P),cbind(x2004$Dem2P,x2008$Dem2P),cbind(x2008$Dem2P,x2012$Dem2P),cbind(x2012$Dem2P,x2016$Dem2P))
+cov(vdata2[,1],vdata2[,2])
+cor(vdata2[,1],vdata2[,2])
+@
+
+<<>>=
+data1=read.csv("~/Fundamental Models/pastvote.csv")
+summary(data1)
+head(data1)
+colnames(data1)<-c("State","Year","Dem","Rep","Other","Dem2P","Rep2P")
+head(data1)
+data1$margin<-data1$Dem2P-data1$Rep2P
+y1992=subset(data1,Year=="1992")
+y1996=subset(data1,Year=="1996")
+y2000=subset(data1,Year=="2000")
+y2004=subset(data1,Year=="2004")
+y2008=subset(data1,Year=="2008")
+y2012=subset(data1,Year=="2012")
+y2016=subset(data1,Year=="2016")
+mfor2008=cbind(y1992$margin,y1996$margin,y2000$margin,y2004$margin)
+avgmargin2008=rowMeans(mfor2008)
+mfor2012=cbind(y1996$margin,y2000$margin,y2004$margin,y2008$margin)
+avgmargin2012=rowMeans(mfor2012)
+mfor2016=cbind(y2000$margin,y2004$margin,y2008$margin,y2012$margin)
+avgmargin2016=rowMeans(mfor2016)
+
+#2008
+#Strong Reds
+y1996$State[which(avgmargin2008<= -.2)]
+#Reds
+y1996$State[which((avgmargin2008 > -.2) & (avgmargin2008 <= -.1))]
+#Lean Red
+y1996$State[which((avgmargin2008 > -.1) & (avgmargin2008 <= -.025))]
+#Toss Up
+y1996$State[which(abs(avgmargin2008) >= 0 & (abs(avgmargin2008) < 0.025))]
+#Strong Blue
+y1996$State[which(avgmargin2008>= .2)]
+#Blue
+y1996$State[which((avgmargin2008 < .2) & (avgmargin2008 >= .1))]
+#Lean Blue
+y1996$State[which((avgmargin2008 < .1) & (avgmargin2008 >= .025))]
+
+#2012
+#Strong Red
+y1996$State[which(avgmargin2012<= -.2)]
+#Red
+y1996$State[which((avgmargin2012 > -.2) & (avgmargin2012 <= -.1))]
+#Lean Red
+y1996$State[which((avgmargin2012 > -.1) & (avgmargin2012 <= -.025))]
+#Toss Up
+y1996$State[which(abs(avgmargin2012) >= 0 & (abs(avgmargin2012) < 0.025))]
+#Strong Blue
+y1996$State[which(avgmargin2012>= .2)]
+#Blues
+y1996$State[which((avgmargin2012 < .2) & (avgmargin2012 >= .1))]
+#Lean Blue
+y1996$State[which((avgmargin2012 < .1) & (avgmargin2012 >= .025))]
+
+#2016
+#Strong Reds
+y1996$State[which(avgmargin2016<= -.2)]
+#Reds
+y1996$State[which((avgmargin2016 > -.2) & (avgmargin2016 <= -.1))]
+#Lean Red
+y1996$State[which((avgmargin2016 > -.1) & (avgmargin2016 <= -.025))]
+#Toss Up
+y1996$State[which(abs(avgmargin2016) >= 0 & (abs(avgmargin2016) < 0.025))]
+#Strong Blues
+y1996$State[which(avgmargin2016>= .2)]
+#Blues
+y1996$State[which((avgmargin2016 < .2) & (avgmargin2016 >= .1))]
+#Lean Blue
+y1996$State[which((avgmargin2016 < .1) & (avgmargin2016 >= .025))]
+
+
+
+@
+
+<<>>=
+
+histmargin=cbind(as.factor(y1996$State),y1992$margin,y1996$margin,y2000$margin,y2004$margin,y2004$margin,y2008$margin,y2012$margin,y2016$margin)
+margind
+@
+
+
+The divisions should be 
+>.2, (.1,.2), (.1,0.5)
+
+\end{document}
